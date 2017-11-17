@@ -1,5 +1,7 @@
 from sklearn import cross_validation
 import re
+#import zhon
+from zhon.hanzi import punctuation
 
 class partition:
     def __init__(self):
@@ -10,9 +12,15 @@ class partition:
 
     def partition(self):
         for line in self.filename.readlines():
-            new_line = re.sub(r"/\w*","",line)
+            line = re.sub(r"/\w*","",line)
+            line = re.sub((r"[%s]+"%(punctuation)), "", line)
+            line = re.sub(r"\d*","",line)
+            line = re.sub(r"-*","",line)
+            line = re.sub(r"{.*}","",line)
+            line = re.sub(r"\]\w*","",line)
+            line = re.sub(r"\[","",line)
             #new_line.replace(" ", "")
-            self.c.append(new_line)
+            self.c.append(line)
 
         c_train, c_test = cross_validation.train_test_split(self.c, test_size=0.2)
         for i in c_train:
